@@ -1,0 +1,8 @@
+site_name: mkdocs-learn
+site_url: http://mkdocs.ae
+theme:
+  name: null
+  custom_dir: custom_theme/
+extra:
+  style: ./css/main.css
+  logo: ./images/SIGIL-LOGO.png
