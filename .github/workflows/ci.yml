@@ -28,11 +28,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
       - name: Setup Python, install plugins, and build site
         uses: actions/setup-python@v4
         with:
-          python-version: 3.x
+          python-version: 3.8
       - run: pip install mkdocs-material mkdocs-minify-plugin pillow cairosvg
       - run: mkdocs build --site-dir ./_site
       - name: Upload artifact
