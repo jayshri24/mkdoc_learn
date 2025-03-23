@@ -42,11 +42,6 @@ jobs:
         run: |
           mkdocs build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: ./site
-          
       - name: Deploy MkDocs
         run: |
           mkdocs gh-deploy --force --remote-branch gh-pages
