@@ -8,3 +8,7 @@ extra:
   logo: ./images/SIGIL-LOGO.png
   about: 
     description: test dynamic value from yml
+plugins:
+  - macros:
+      home: custom_theme/main.html
+  - search
