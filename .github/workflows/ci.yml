@@ -1,49 +1,78 @@
-name: Deploy Mkdocs Site
-
-# Controls when the workflow will run
+name: ci 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-    paths:
-      - "docs/**"
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - "docs/**"
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
+    branches: 
+      - main
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache 
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material mkdocs-macros-plugin
+      - run: mkdocs gh-deploy --force
 
-      - name: Install dependencies
-        run: |
-          pip install mkdocs-material mkdocs-macros-plugin
+# name: Deploy Mkdocs Site
 
-      - name: Build MkDocs
-        run: |
-          mkdocs build
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push or pull request events but only for the "main" branch
+#   push:
+#     branches: [ "main" ]
+#     paths:
+#       - "docs/**"
+#   pull_request:
+#     branches: [ "main" ]
+#     paths:
+#       - "docs/**"
 
-      - name: Deploy MkDocs
-        run: |
-          mkdocs gh-deploy --force --clean --remote-branch gh-pages
-          git push origin gh-pages --force
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+
+# permissions:
+#   contents: write
+#   pages: write
+#   id-token: write
+
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.8"
+
+#       - name: Install dependencies
+#         run: |
+#           pip install mkdocs-material mkdocs-macros-plugin
+
+#       - name: Build MkDocs
+#         run: |
+#           mkdocs build
+
+#       - name: Deploy MkDocs
+#         run: |
+#           mkdocs gh-deploy --force --clean --remote-branch gh-pages
+#           git push origin gh-pages --force
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
