@@ -45,5 +45,6 @@ jobs:
       - name: Deploy MkDocs
         run: |
           mkdocs gh-deploy --force --remote-branch gh-pages
+          git push origin gh-pages --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
