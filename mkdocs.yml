@@ -6,3 +6,5 @@ theme:
 extra:
   style: ./css/main.css
   logo: ./images/SIGIL-LOGO.png
+  about: 
+    description: test dynamic value from yml
