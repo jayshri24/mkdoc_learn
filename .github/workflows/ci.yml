@@ -1,11 +1,14 @@
-name: ci 
+name: ci
 on:
   push:
     branches: 
       - main
-      - gh-pages
+
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,14 +26,17 @@ jobs:
           pip install mkdocs==1.1.2
           pip install mkdocs-material mkdocs-macros-plugin
 
-      - name: Build and Deploy
+      # First, build the site
+      - name: Build MkDocs Site
+        run: mkdocs build  # This generates the ./site directory
+
+      # Deploy separately
+      - name: Deploy MkDocs
         run: |
-          mkdocs build
           mkdocs gh-deploy --force --clean --remote-branch gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Ensure GitHub Pages picks up the latest deployment
   pages:
     needs: deploy
     runs-on: ubuntu-latest
@@ -41,10 +47,11 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./site  # The `site/` directory now exists
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v3
+
 
 
 # name: Deploy Mkdocs Site
